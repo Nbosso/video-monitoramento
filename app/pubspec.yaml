@@ -34,3 +34,11 @@ flutter:
 
   # assets:
   #   - images/a_dot_burr.jpeg
+
+scripts: 
+  mobx_watch_build_clean: $clean & $get & $runner watch --delete-conflicting-outputs 
+
+vars: 
+  clean: flutter clean 
+  get: flutter pub get  
+  runner: flutter pub run build_runner
