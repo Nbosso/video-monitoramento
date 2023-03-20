@@ -20,6 +20,13 @@ class LoginPageState extends State<LoginPage> {
   TextEditingController controllerSenha = TextEditingController();
 
   @override
+  void dispose() {
+    controllerEmail.text = '';
+    controllerSenha.text = '';
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
@@ -130,7 +137,7 @@ class LoginPageState extends State<LoginPage> {
                           color: Colors.white, fontWeight: FontWeight.w500),
                       textAlign: TextAlign.center,
                     ),
-                    Icon(Icons.chevron_right_rounded, color: Colors.white)
+                    Icon(Icons.chevron_right_rounded, color: Colors.white,)
                   ],
                 ),
         );
@@ -144,8 +151,8 @@ class LoginPageState extends State<LoginPage> {
         builder: (context) {
           return AlertDialog(
             title: const Text('Não foi possível fazer login.'),
-            content: const Text(
-              "E-mail ou senha incorretos.",
+            content: Text(
+              store.errorMessage,
               textAlign: TextAlign.center,
             ),
             icon: Icon(

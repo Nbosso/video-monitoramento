@@ -21,14 +21,17 @@ abstract class _LoginStoreBase with Store {
   @action
   setLoading() => isLoading = !isLoading;
 
+  @observable
+  String errorMessage = '';
+
   Future<bool> login(ParamsLogin paramsLogin) async {
     setLoading();
     await Future.delayed(const Duration(seconds: 1));
     bool result = false;
     final response = await loginUsecase(paramsLogin);
-    response.fold((l) => null, (r) {
+    response.fold((l) => errorMessage = l.message, (r) {
       result = true;
-      Modular.to.pushNamed('/home/');
+      Modular.to.pushNamed('/home/', arguments: {"token": r});
     });
     setLoading();
     return result;
