@@ -1,0 +1,22 @@
+slidy: '1'
+variables:
+  customMessage: "Complete"    # Gets  ${Local.var.customMessage}
+
+scripts:
+  # Steped command (slidy run mobx)   
+  mobx:
+    description: "mobx"
+    steps:
+      - name: "Clean"
+        run: flutter clean
+        
+      - name: "GetPackages"
+        description: "Get packages"
+        run: flutter pub get
+
+      - name: "Build runner"
+        description: "Build runner"
+        run: flutter pub run build_runner watch --delete-conflicting-outputs 
+        
+
+      - run: echo ${Local.var.customMessage}

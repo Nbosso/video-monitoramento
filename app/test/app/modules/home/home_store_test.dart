@@ -1,11 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:app/app/app/modules/login/login_store.dart';
+import 'package:app/app/modules/home/home_store.dart';
  
 void main() {
-  late LoginStore store;
+  late HomeStore store;
 
   setUpAll(() {
-    store = LoginStore();
+    store = HomeStore();
   });
 
   test('increment count', () async {

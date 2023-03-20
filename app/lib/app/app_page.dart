@@ -10,14 +10,13 @@ class AppPage extends StatefulWidget {
   AppPageState createState() => AppPageState();
 }
 class AppPageState extends State<AppPage> {
-  // final AppStore store = Modular.get();
 
   @override
   Widget build(BuildContext context) {
     Modular.setInitialRoute('/login/');
 
     return MaterialApp.router(
-      title:  'App Video Monitoramento',
+      title: 'App Video Monitoramento',
       debugShowCheckedModeBanner: false,
       routerDelegate: Modular.routerDelegate,
       routeInformationParser: Modular.routeInformationParser,

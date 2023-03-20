@@ -1,16 +1,15 @@
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:app/app/modules/home/home_store.dart';
 import 'package:flutter/material.dart';
 
-import 'login_store.dart';
-
-class LoginPage extends StatefulWidget {
+class HomePage extends StatefulWidget {
   final String title;
-  const LoginPage({Key? key, this.title = 'LoginPage'}) : super(key: key);
+  const HomePage({Key? key, this.title = 'HomePage'}) : super(key: key);
   @override
-  LoginPageState createState() => LoginPageState();
+  HomePageState createState() => HomePageState();
 }
-class LoginPageState extends State<LoginPage> {
-  final LoginStore store = Modular.get();
+class HomePageState extends State<HomePage> {
+  final HomeStore store = Modular.get();
 
   @override
   Widget build(BuildContext context) {
