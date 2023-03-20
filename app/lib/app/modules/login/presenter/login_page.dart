@@ -16,6 +16,7 @@ class LoginPageState extends State<LoginPage> {
   final LoginStore store = Modular.get();
 
   bool credentialsEmpty = false;
+  bool showPassword = false;
   TextEditingController controllerEmail = TextEditingController();
   TextEditingController controllerSenha = TextEditingController();
 
@@ -31,10 +32,12 @@ class LoginPageState extends State<LoginPage> {
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [_top(), _middle(), _bottom()],
+        child: Center(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [_top(), _middle(), _bottom()],
+          ),
         ),
       ),
     );
@@ -42,16 +45,17 @@ class LoginPageState extends State<LoginPage> {
 
   _top() {
     return Column(
-      children: const [
-        Text(
+      children: [
+        Image.network('https://cdn-icons-png.flaticon.com/512/7304/7304888.png', width: 100, height: 100,),
+        const Text(
           'Vídeo Monitoramento',
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
         ),
-        SizedBox(
+        const SizedBox(
           height: 16,
         ),
-        Text('Sua segurança de qualquer lugar.'),
-        SizedBox(
+        const Text('Sua segurança de qualquer lugar.'),
+        const SizedBox(
           height: 16,
         ),
       ],
@@ -61,37 +65,45 @@ class LoginPageState extends State<LoginPage> {
   _middle() {
     return Column(
       children: [
-        TextFormField(
-          controller: controllerEmail,
-          decoration: InputDecoration(
-              label: const Text(
-                'E-mail',
-                style:
-                    TextStyle(color: Colors.black, fontWeight: FontWeight.w500),
-              ),
-              border:
-                  OutlineInputBorder(borderRadius: BorderRadius.circular(20))),
+        Container(
+          constraints: const BoxConstraints(maxWidth: 500),
+          child: TextFormField(
+            controller: controllerEmail,
+            decoration: InputDecoration(
+                label: const Text(
+                  'E-mail',
+                  style: TextStyle(
+                      color: Colors.black, fontWeight: FontWeight.w500),
+                ),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20))),
+          ),
         ),
         const SizedBox(
           height: 16,
         ),
-        TextFormField(
-          controller: controllerSenha,
-          decoration: InputDecoration(
-              label: const Text(
-                'Senha',
-                style:
-                    TextStyle(color: Colors.black, fontWeight: FontWeight.w500),
+        Container(
+          constraints: const BoxConstraints(maxWidth: 500),
+          child: TextFormField(
+              controller: controllerSenha,
+              obscureText: showPassword,
+              decoration: InputDecoration(
+                label: const Text(
+                  'Senha',
+                  style: TextStyle(
+                      color: Colors.black, fontWeight: FontWeight.w500),
+                ),
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
+              suffixIcon: GestureDetector(
+                onTap: () {
+                    setState(() {
+                      showPassword = !showPassword;
+                    });
+                  },
+                child: Icon(showPassword ? Icons.password_rounded : Icons.remove_red_eye_outlined))),
               ),
-              border:
-                  OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
-              suffixIcon: const Icon(Icons.remove_red_eye_outlined)),
         ),
-        Align(
-          alignment: Alignment.centerRight,
-          child: TextButton(
-              onPressed: () {}, child: const Text('Esqueci minha senha')),
-        )
       ],
     );
   }
@@ -113,7 +125,7 @@ class LoginPageState extends State<LoginPage> {
       child: Observer(builder: (_) {
         return Container(
           padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
-          constraints: const BoxConstraints(minWidth: 200, maxWidth: 500),
+          constraints: const BoxConstraints(minWidth: 200, maxWidth: 400),
           decoration: BoxDecoration(
               color: Colors.green[800],
               borderRadius: BorderRadius.circular(20)),
@@ -137,7 +149,10 @@ class LoginPageState extends State<LoginPage> {
                           color: Colors.white, fontWeight: FontWeight.w500),
                       textAlign: TextAlign.center,
                     ),
-                    Icon(Icons.chevron_right_rounded, color: Colors.white,)
+                    Icon(
+                      Icons.chevron_right_rounded,
+                      color: Colors.white,
+                    )
                   ],
                 ),
         );

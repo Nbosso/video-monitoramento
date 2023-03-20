@@ -36,7 +36,7 @@ class HomePageState extends State<HomePage> {
             controller: store.controllerPageView,
             children: const [
               ListCamerasWidget(),
-              DetailCameraWidget(camera: 'Câmera Coelho')
+              DetailCameraWidget()
             ],
           )),
       drawer: drawer(),
@@ -45,33 +45,41 @@ class HomePageState extends State<HomePage> {
 
   drawer() {
     return Drawer(
+      width: 250,
       backgroundColor: Colors.white,
       child: ListView(
         children: [
-          DrawerHeader(
-            decoration: BoxDecoration(
-              color: Colors.green[700],
-            ),
-            child: CircleAvatar(
-              backgroundColor: Colors.green[200],
-              radius: 5,
-              child: const Icon(Icons.person),
+          UserAccountsDrawerHeader(
+            decoration: BoxDecoration(color: Colors.green[700]),
+            accountName: const Text('Candidato Seventh'),
+            accountEmail: const Text('candidato@seventh.com'),
+            currentAccountPicture: CircleAvatar(
+              backgroundColor: Colors.green[300],
+              child: const Text(
+                "CS",
+                style: TextStyle(fontSize: 30.0, color: Colors.white),
+              ),
             ),
           ),
           ListTile(
               leading: const Icon(Icons.home),
               title: const Text("Home"),
-              trailing: const Icon(Icons.arrow_forward),
               onTap: () {
                 Navigator.pop(context);
                 store.controllerPageView.jumpToPage(0);
               }),
           ListTile(
+              enabled: false,
               leading: const Icon(Icons.account_circle),
               title: const Text("Perfil"),
-              trailing: const Icon(Icons.arrow_forward),
               onTap: () {
                 Navigator.pop(context);
+              }),
+          ListTile(
+              leading: const Icon(Icons.logout_rounded),
+              title: const Text("Sair"),
+              onTap: () {
+                Modular.to.pushNamed('/login/');
               })
         ],
       ),

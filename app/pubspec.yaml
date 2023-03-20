@@ -5,7 +5,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: '>=2.19.4 <3.0.0'
+  sdk: '>=2.19.4 <4.0.0'
 
 dependencies:
   flutter:
@@ -22,6 +22,7 @@ dependencies:
   build_runner: ^2.3.3
   dartz: ^0.10.1
   video_player: ^2.6.0
+  flutter_speed_dial: ^6.2.0
 
 dev_dependencies:
   flutter_test:
@@ -35,3 +36,14 @@ flutter:
 
   # assets:
   #   - images/a_dot_burr.jpeg
+
+scripts: 
+  mobx_build: $runner build
+  mobx_watch: $clean & $get & $runner watch
+  mobx_build_clean: $clean & $get & $runner build --delete-conflicting-outputs
+  mobx_watch_build_clean: $clean & $get & $runner watch --delete-conflicting-outputs 
+
+vars: 
+  clean: flutter clean 
+  get: flutter pub get  
+  runner: flutter pub run build_runner
