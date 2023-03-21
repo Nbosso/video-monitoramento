@@ -46,7 +46,11 @@ class LoginPageState extends State<LoginPage> {
   _top() {
     return Column(
       children: [
-        Image.network('https://cdn-icons-png.flaticon.com/512/7304/7304888.png', width: 100, height: 100,),
+        Image.network(
+          'https://cdn-icons-png.flaticon.com/512/7304/7304888.png',
+          width: 100,
+          height: 100,
+        ),
         const Text(
           'Vídeo Monitoramento',
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
@@ -85,9 +89,9 @@ class LoginPageState extends State<LoginPage> {
         Container(
           constraints: const BoxConstraints(maxWidth: 500),
           child: TextFormField(
-              controller: controllerSenha,
-              obscureText: showPassword,
-              decoration: InputDecoration(
+            controller: controllerSenha,
+            obscureText: showPassword,
+            decoration: InputDecoration(
                 label: const Text(
                   'Senha',
                   style: TextStyle(
@@ -95,14 +99,16 @@ class LoginPageState extends State<LoginPage> {
                 ),
                 border:
                     OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
-              suffixIcon: GestureDetector(
-                onTap: () {
-                    setState(() {
-                      showPassword = !showPassword;
-                    });
-                  },
-                child: Icon(showPassword ? Icons.password_rounded : Icons.remove_red_eye_outlined))),
-              ),
+                suffixIcon: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        showPassword = !showPassword;
+                      });
+                    },
+                    child: Icon(showPassword
+                        ? Icons.password_rounded
+                        : Icons.remove_red_eye_outlined))),
+          ),
         ),
       ],
     );

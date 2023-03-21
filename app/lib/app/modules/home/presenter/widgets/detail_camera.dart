@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:video_player/video_player.dart';
-import 'dart:io' show Platform;
+
 import '../home_store.dart';
 
 class DetailCameraWidget extends StatefulWidget {
@@ -17,9 +19,7 @@ class DetailCameraWidget extends StatefulWidget {
 class _DetailCameraWidgetState extends State<DetailCameraWidget> {
   final HomeStore store = Modular.get();
 
-  VideoPlayerController? _controller;
-
-  String url = '';
+  bool isPlaying = true;
 
   @override
   void initState() {
@@ -28,74 +28,78 @@ class _DetailCameraWidgetState extends State<DetailCameraWidget> {
   }
 
   getUrl() async {
-    if (Platform.isAndroid || Platform.isAndroid) {
-      final result = await store.getUrl('bunny.mp4');
-      if (result != '') {
-        _controller = VideoPlayerController.network(result.toString());
-        setState(() {
-          url = result.toString();
-        });
-      } else {
-        setState(() {
-          url = 'Erro';
-        });
-      }
-    } else {
-      setState(() {
-        url = 'Erro';
-      });
+    final result = await store.getUrl('bunny.mp4');
+    if (result != '') {
+      store.controller = VideoPlayerController.network(result)
+        ..initialize()
+        ..play()..setLooping(true);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: url != 'Erro'
-          ? _controller != null
-              ? Center(
-                  child: _controller!.value.isInitialized
-                      ? AspectRatio(
-                          aspectRatio: _controller!.value.aspectRatio,
-                          child: VideoPlayer(_controller!),
-                        )
-                      : const CircularProgressIndicator(),
+      body: Center(
+        child: Observer(builder: (_) {
+          return store.controller != null
+              ? AspectRatio(
+                  aspectRatio: 16 / 9,
+                  child: VideoPlayer(store.controller!),
                 )
-              : const Center(child: CircularProgressIndicator())
-          : const Center(
-              child: Text(
-              'Erro ao carregar vídeo. Por favor tente novamente utilizando um dispositivo Android.',
-              textAlign: TextAlign.center,
-            )),
+              : const CircularProgressIndicator();
+        }),
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(24),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             SpeedDial(
                 buttonSize: const Size(35, 35),
                 icon: Icons.update,
                 backgroundColor: Colors.green[700],
                 onPress: () {
-                  setState(() {
-                    url = '';
-                  });
-                  getUrl();
+                  store.controller!.seekTo(const Duration(seconds: 0));
+                },
+                children: [
+                  SpeedDialChild(),
+                ]),
+                SpeedDial(
+                buttonSize: const Size(38, 38),
+                icon: Icons.keyboard_double_arrow_left_rounded,
+                backgroundColor: Colors.green[700],
+                onPress: () {
+                  store.controller!.seekTo(Duration(
+                      seconds:
+                          store.controller!.value.position.inSeconds + 10));
                 },
                 children: [
                   SpeedDialChild(),
                 ]),
             SpeedDial(
-                animatedIcon: AnimatedIcons.play_pause,
+                icon:
+                    isPlaying ? Icons.pause_rounded : Icons.play_arrow_rounded,
                 backgroundColor: Colors.green[700],
                 onPress: () {
-                  if (url != 'Erro' || url == '') {
-                    setState(() {
-                      _controller!.value.isPlaying
-                          ? _controller!.pause()
-                          : _controller!.play();
-                    });
-                  }
+                  setState(() {
+                    isPlaying = !isPlaying;
+                  });
+                  store.controller!.value.isPlaying
+                      ? store.controller!.pause()
+                      : store.controller!.play();
+                },
+                children: [
+                  SpeedDialChild(),
+                ]),
+                SpeedDial(
+                buttonSize: const Size(38, 38),
+                icon: Icons.keyboard_double_arrow_right_rounded,
+                backgroundColor: Colors.green[700],
+                onPress: () {
+                  store.controller!.seekTo(Duration(
+                      seconds:
+                          store.controller!.value.position.inSeconds + 10));
                 },
                 children: [
                   SpeedDialChild(),
@@ -105,7 +109,14 @@ class _DetailCameraWidgetState extends State<DetailCameraWidget> {
                 icon: Icons.fullscreen_rounded,
                 backgroundColor: Colors.green[700],
                 onPress: () {
-                  if (url != 'Erro' || url == '') {}
+                  store.setIsFullScreen();
+                  if (store.isFullScreen) {
+                    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+                        overlays: SystemUiOverlay.values);
+                  } else {
+                    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+                        overlays: []);
+                  }
                 },
                 children: [
                   SpeedDialChild(),
@@ -118,9 +129,12 @@ class _DetailCameraWidgetState extends State<DetailCameraWidget> {
 
   @override
   void dispose() {
-    super.dispose();
-    if (_controller != null) {
-      _controller!.dispose();
+    if (store.controller != null) {
+      store.controller!.dispose();
+      SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+          overlays: SystemUiOverlay.values);
     }
+    store.controller = null;
+    super.dispose();
   }
 }

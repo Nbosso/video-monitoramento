@@ -1,6 +1,7 @@
 import 'package:app/app/modules/home/presenter/widgets/detail_camera.dart';
 import 'package:app/app/modules/home/presenter/widgets/list_cameras_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 import 'home_store.dart';
@@ -25,21 +26,23 @@ class HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.green[700],
-      ),
-      body: Padding(
-          padding: const EdgeInsets.all(24),
-          child: PageView(
+    return Observer(
+      builder: (context) {
+        return Scaffold(
+          appBar: store.isFullScreen ? null : AppBar(
+            backgroundColor: Colors.green[700],
+          ),
+          body: PageView(
             physics: const NeverScrollableScrollPhysics(),
             controller: store.controllerPageView,
             children: const [
               ListCamerasWidget(),
               DetailCameraWidget()
             ],
-          )),
-      drawer: drawer(),
+          ),
+          drawer: drawer(),
+        );
+      }
     );
   }
 
